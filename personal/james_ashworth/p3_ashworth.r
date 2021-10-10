@@ -13,10 +13,10 @@ json_to_tibble <- function(x){
 }
 
 # Read file
-dat <- read_csv("C:/code/p3_AshLee/data/SafeGraph - Patterns and Core Data - Chipotle - July 2021/SafeGraph - Patterns and Core Data - Chipotle - July 2021/Core Places and Patterns Data/chipotle_core_poi_and_patterns.csv")
+bat <- read_csv("C:/code/p3_AshLee/data/SafeGraph - Patterns and Core Data - Chipotle - July 2021/SafeGraph - Patterns and Core Data - Chipotle - July 2021/Core Places and Patterns Data/chipotle_core_poi_and_patterns.csv")
 
 #Freehand code
-dat %>%
+bat %>%
     slice(5:10) %>%
     #pull(related_same_day_brand) #related in the fact they went from chipolte and the listed store 50 times same day
     pull(popularity_by_day)
@@ -40,8 +40,8 @@ datNest <- dat %>%
 # Exploring
 datNest %>% 
     slice(1:5) %>% 
-    select(placekey, location_name, latitude, longitude, city , region, device_type) %>% 
-    unnest(device_type) %>% 
+    select(popularity_by_day, device_type) %>% 
+    unnest(popularity_by_day) %>% 
     filter(!is.na(name)) %>% 
     pivot_wider(names_from = name, values_from = value) # note that the rows b/c col headers
 
