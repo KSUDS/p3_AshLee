@@ -18,6 +18,31 @@ dat %>%
     pull(popularity_by_day)
 
 datNest <- dat %>%
+    slice(1:50) %>% # for the example in class.
+    mutate(
+        open_hours = map(open_hours, ~json_to_tibble(.x)),
+        visits_by_day = map(visits_by_day, ~bracket_to_tibble(.x)),
+        visitor_country_of_origin = map(visitor_country_of_origin, ~json_to_tibble(.x)),
+        bucketed_dwell_times = map(bucketed_dwell_times, ~json_to_tibble(.x)),
+        related_same_day_brand = map(related_same_day_brand, ~json_to_tibble(.x)),
+        related_same_month_brand = map(related_same_month_brand, ~json_to_tibble(.x)),
+        popularity_by_hour = map(popularity_by_hour, ~json_to_tibble(.x)),
+        popularity_by_day = map(popularity_by_day, ~json_to_tibble(.x)),
+        device_type = map(device_type, ~json_to_tibble(.x)),
+        visitor_home_cbgs = map(visitor_home_cbgs, ~json_to_tibble(.x)),
+        visitor_home_aggregation = map(visitor_home_aggregation, ~json_to_tibble(.x)),
+        visitor_daytime_cbgs = map(visitor_daytime_cbgs, ~json_to_tibble(.x))
+        ) 
+
+datNest <- datNest %>%
+    select(placekey, latitude, longitude, street_address,
+        city, region, postal_code,  
+        raw_visit_counts:visitor_daytime_cbgs, parent_placekey, open_hours)
+
+
+
+
+datNest <- dat %>%
     slice(1:25) %>% 
     mutate(
         visitor_country_of_origin = map(visitor_country_of_origin, ~json_to_tibble(.x)),
