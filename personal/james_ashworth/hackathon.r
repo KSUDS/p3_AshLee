@@ -53,7 +53,7 @@ write.csv('C:/code/p3_AshLee/data/v1_base_b4_census.csv', x = datNest2)
 #dat_w_geo <- merge(datNest2, def1, by = xxxxxxxx)
 
 # If need to read in material after blowing up pc again
-datNest2 <- read_csv("C:/code/p3_AshLee/data/v1_base_b4_census.csv")
+
 def2 <- read_csv("C:/code/p3_AshLee/hackathon_data/safegraph_open_census_data_2019/data/cbg_b03.csv")
 def4 <- read_csv("C:/code/p3_AshLee/hackathon_data/safegraph_open_census_data_2019/data/cbg_b01.csv")
 def5 <- read_csv("C:/code/p3_AshLee/hackathon_data/safegraph_open_census_data_2019/data/cbg_b19.csv")
@@ -82,3 +82,9 @@ head(datNest3)
 
 # Write data with census data metrics
 write.csv('C:/code/p3_AshLee/data/v1_base_with_census_metrics.csv', x = datNest3)
+
+
+# Code in case break in work
+datNest3 <- read_csv("C:/code/p3_AshLee/data/v1_base_with_census_metrics.csv")
+
+df <- sf::st_read("file_name.geojson")

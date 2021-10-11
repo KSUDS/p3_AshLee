@@ -59,3 +59,18 @@ datNest %>%
 dat %>% slice(1:5) %>% select(placekey, location_name, latitude, longitude, city 
     , region, device_type)
 
+# 10/11 data
+
+# install.packages("USAboundaries")
+# install.packages("USAboundariesData", repos = "http://packages.ropensci.org", type = "source")
+# install.packages("leaflet")
+
+library(tidyverse)
+library(sf)
+library(USAboundaries)
+library(leaflet)
+
+httpgd::hgd()
+httpgd::hgd_browse()
+
+# 
