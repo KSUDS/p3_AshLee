@@ -102,6 +102,32 @@ library(sf)
 library(USAboundaries)
 library(leaflet)
 
+dat <- read_rds("~/Downloads/Data_Science/p3_AshLee-1/data/chipotle_nested.rds")
 
 
+dat <- dat %>%
+    st_as_sf(coords = c("longitude", "latitude"), crs = 4326)
 
+select(dat, street_address, region, geometry)
+
+cal <- USAboundaries :: us_counties(states = "California")
+
+ggplot()+
+    geom_sf(data = cal)+
+    geom_sf(data = filter(dat, region == "CA"))
+
+ggplot()+
+    geom_sf(data = cal, aes(fill = awater))+
+    geom_sf_text(data = cal, aes(label = name), color = "white")
+
+cal %>%
+    select(-9) %>%
+    mutate(sf_area = st_area(geometry),
+    sf_middle = st_centroid(geometry))
+
+
+chipotle_in_county <- st_join(dat, cal, join = st_within)
+
+
+chipotle_in_county %>%
+    count(geoid, name)
