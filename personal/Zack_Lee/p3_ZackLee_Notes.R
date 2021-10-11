@@ -76,3 +76,32 @@ datNest %>%
 
 dat %>% slice(1:5) %>% select(placekey, location_name, latitude, longitude, city 
     , region, device_type)
+
+
+
+
+
+    ######          p3 datasets         #######
+
+    v1_base_b4_census <- read_csv("~/Downloads/Data_Science/p3_AshLee-1/data/v1_base_b4_census.csv")
+
+    v1_base_with_census_metrics <- read_csv("~/Downloads/Data_Science/p3_AshLee-1/data/v1_base_with_census_metrics.csv")
+
+
+
+#############       10/11 notes      ##############
+
+#boundaries
+
+install.packages("USAboundaries")
+install.packages("USAboundariesData", repos = "http://packages.ropensci.org", type = "source")
+install.packages("leaflet")
+
+library(tidyverse)
+library(sf)
+library(USAboundaries)
+library(leaflet)
+
+
+
+
