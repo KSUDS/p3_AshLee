@@ -15,28 +15,42 @@ gas_in_ga <- gas_in_ga %>% select(-24)
 # Write the joined mapping data
 write.csv('~/Downloads/Data_Science/p3_AshLee/data/v1_base_with_census_mapping_metrics.csv', x = gas_in_ga)
 
-#Income, white
+#Income, Total Pop
 ggplot(data = gas_in_ga) +
-    geom_sf(aes(color = wam_income, size = ttl_white)) +
+    geom_sf(aes(color = wam_income, size = ttl_population)) +
     scale_fill_viridis_c(option = "plasma", trans = "sqrt") 
     #geom_sf(data = filter(gas_in_ga, region == "GA"))
     #geom_sf_text(data = ga, aes(label = name), color = "#da0a0a")
 
+#Income, white
+ggplot()+
+    geom_sf(data = ga) +
+    geom_sf(data = gas_in_ga, aes(color = wam_income, size = ttl_white)) +
+    scale_fill_viridis_c(option = "plasma", trans = "sqrt")
 #Income, black
-ggplot(data = gas_in_ga) +
-    geom_sf(aes(color = wam_income, size = ttl_black)) +
+ggplot()+
+    geom_sf(data = ga) +
+    geom_sf(data = gas_in_ga, aes(color = wam_income, size = ttl_black)) +
     scale_fill_viridis_c(option = "plasma", trans = "sqrt")
-
 #Income, asian
-ggplot(data = gas_in_ga) +
-    geom_sf(aes(color = wam_income, size = ttl_asian)) +
+ggplot()+
+    geom_sf(data = ga) +
+    geom_sf(data = gas_in_ga, aes(color = wam_income, size = ttl_asian)) +
     scale_fill_viridis_c(option = "plasma", trans = "sqrt")
 
-
-#Age difference
+#Age difference thru state
 ggplot(data = gas_in_ga) +
     geom_sf(aes(color = wam_age))
 
+
+ggplot()+
+    geom_sf(data = ga) +
+    geom_sf(data = gas_in_ga, aes(color = wam_income, size = ttl_asian)) +
+    scale_fill_viridis_c(option = "plasma", trans = "sqrt")
+
+#trying to filter top counties
+top_counties <- gas_in_ga %>%
+    filter(namelsad == c("Gwinnett", "Fulton", "DeKalb"))
 
 #continue for 2021 data
 
