@@ -73,4 +73,41 @@ library(leaflet)
 httpgd::hgd()
 httpgd::hgd_browse()
 
-# 
+# pulls in rds file (copy some stuff)
+dat$latitude[1] # change this in other code
+dat <- read_rds("C:/code/p3_AshLee/data/chipotle_nested.rds")
+
+dat <- dat %>%
+    st_as_sf(coords = c("longitude", "latitude"), crs = 4326)
+
+select(dat, street_address, region, geometry)
+
+cal <- USAboundaries::us_counties(states = 'California')
+
+cal 
+# map cali counties
+ggplot() +
+    geom_sf(data = cal) +
+    geom_sf(data = filter(dat, region == 'CA'))
+
+# map cali counties (for us)
+ggplot() +
+    geom_sf(data = cal) +
+    geom_sf(data = cal, aes(fill = awater)) +
+    geom_sf_text(data = cal, aes(label = name), color = "grey")
+
+#had to remove double data
+cal %>%
+    select(-9) %>%
+    mutate(sf_area = st_area(geometry),
+    sf_middle = st_centroid(geometry)
+    )
+
+# blend/join together
+chipolte_in_county <- st_join(dat, cal, join = st_within)
+
+
+# create object w/ count by county
+chipolte_in_county %>%
+    as_tibble() %>%
+    count(geoid, name)
