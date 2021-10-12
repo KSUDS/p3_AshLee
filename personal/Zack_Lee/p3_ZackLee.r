@@ -1,4 +1,3 @@
-# Getting mapping data
 
 datNest4 <- read_csv("~/Downloads/Data_Science/p3_AshLee-1/data/v1_base_with_census_metrics.csv")
 
@@ -7,15 +6,6 @@ datNest4 <- datNest4 %>%
     st_as_sf(coords = c("longitude", "latitude"), crs = 4326)  # i omitted lat/long...needed?
 
 ga <- USAboundaries::us_counties(states = 'Georgia')
-
-
-# Showing options middle and area
-#ga %>%
-#    select(-9) %>%
-#    mutate(sf_area = st_area(geometry),
-#    sf_middle = st_centroid(geometry)
-#    )
-
 
 # Join data
 gas_in_ga <- st_join(datNest4, ga, join = st_within)
