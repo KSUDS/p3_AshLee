@@ -47,3 +47,6 @@ ggplot(data = gas_in_ga) +
 ggplot(data = gas_in_ga) +
     geom_sf(aes(color = wam_age))
 
+
+#continue for 2021 data
+
