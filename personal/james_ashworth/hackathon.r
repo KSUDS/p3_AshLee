@@ -28,22 +28,20 @@ dat <- read_csv("C:/code/p3_AshLee/hackathon_data/201907/core_poi-patterns.csv")
 # Create version with filtered columns
 
 dat2 <- dat %>%
-    select(c('street_address','raw_visit_counts','visitor_home_cbgs'))
+    select(c('street_address','latitude', 'longitude','raw_visit_counts','visitor_home_cbgs'))
 
 # Flip to tibble (Only on visitor home cbgs, keeping other just in case)
 
 datNest <- dat2 %>%
     #slice(1:50) %>% # for the example in class.
     mutate(
-        #latitude = float(latitude),
-        #longitude = round(longitude,6),
         visitor_cbg = map(visitor_home_cbgs, ~json_to_tibble(.x))
         ) 
 
 # Verticle breakage
 
 datNest2 <- datNest %>%
-    select(street_address, visitor_cbg) %>%
+    select(street_address, latitude, longitude, visitor_cbg) %>%
     unnest(visitor_cbg) 
 
 # Write csv file for base.
@@ -83,7 +81,7 @@ datNest3 <- merge(datNest3, def5, by.x = c('name'), by.y = c('census_block_group
 #pull down to one level
 
 datNest4 <- datNest3 %>%
-        group_by(street_address) %>%
+        group_by(street_address, latitude, longitude) %>%
         summarise(wam_age = weighted.mean(B01002e1,value,na.rm = TRUE)
                 ,wam_income = weighted.mean(B19013e1,value,na.rm = TRUE)
                 ,ttl_value = sum(value)
@@ -107,3 +105,24 @@ write.csv('C:/code/p3_AshLee/data/v1_base_with_census_metrics.csv', x = datNest4
 # Code in case break in work
 datNest4 <- read_csv("C:/code/p3_AshLee/data/v1_base_with_census_metrics.csv")
 
+# Getting mapping data
+datNest4 <- datNest4 %>%
+    st_as_sf(coords = c("longitude", "latitude"), crs = 4326)  # i omitted lat/long...needed?
+
+ga <- USAboundaries::us_counties(states = 'Georgia')
+
+
+# Showing options middle and area
+#ga %>%
+#    select(-9) %>%
+#    mutate(sf_area = st_area(geometry),
+#    sf_middle = st_centroid(geometry)
+#    )
+
+
+# Join data
+gas_in_ga <- st_join(datNest4, ga, join = st_within)
+gas_in_ga <- gas_in_ga %>% select(-24)
+
+# Write the joined mapping data
+write.csv('C:/code/p3_AshLee/data/v1_base_with_census_mapping_metrics.csv', x = gas_in_ga)
