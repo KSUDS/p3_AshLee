@@ -29,7 +29,7 @@ dat <- read_csv("C:/code/p3_AshLee/hackathon_data/202107/core_poi-patterns.csv")
 # Create version with filtered columns
 
 dat2 <- dat %>%
-    select(c('street_address','latitude', 'longitude','raw_visit_counts','visitor_home_cbgs'))
+    select(c('street_address','poi_cbg','latitude', 'longitude','raw_visit_counts','visitor_home_cbgs'))
 
 # Flip to tibble (Only on visitor home cbgs, keeping other just in case)
 
@@ -37,12 +37,12 @@ datNest <- dat2 %>%
     #slice(1:50) %>% # for the example in class.
     mutate(
         visitor_cbg = map(visitor_home_cbgs, ~json_to_tibble(.x))
-        ) 
+        )
 
 # Verticle breakage
 
 datNest2 <- datNest %>%
-    select(street_address, latitude, longitude, visitor_cbg) %>%
+    select(street_address, poi_cbg, latitude, longitude, visitor_cbg) %>%
     unnest(visitor_cbg) 
 
 # Write csv file for base.
@@ -79,10 +79,10 @@ datNest3 <- merge(datNest2, def3, by.x = c('name'), by.y = c('census_block_group
 datNest3 <- merge(datNest3, def4, by.x = c('name'), by.y = c('census_block_group'))
 datNest3 <- merge(datNest3, def5, by.x = c('name'), by.y = c('census_block_group'))
 
-#pull down to one level
+#pull down to one level head(datNest3)
 
 datNest4 <- datNest3 %>%
-        group_by(street_address, latitude, longitude) %>%
+        group_by(street_address, poi_cbg, latitude, longitude) %>%
         summarise(wam_age = weighted.mean(B01002e1,value,na.rm = TRUE)
                 ,wam_income = weighted.mean(B19013e1,value,na.rm = TRUE)
                 ,ttl_value = sum(value)
@@ -121,14 +121,32 @@ ga <- USAboundaries::us_counties(states = 'Georgia')
 #    sf_middle = st_centroid(geometry)
 #    )
 
+# remove duplicate state
+ga <- ga %>% select(-9)
+
 
 # Join data
 gas_in_ga2 <- st_join(datNest4, ga, join = st_within)
-# remove duplicate state
-gas_in_ga2 <- gas_in_ga2 %>% select(-20)
+
 
 # Write the joined mapping data
 write.csv('C:/code/p3_AshLee/data/2021_base_with_census_mapping_metrics2.csv', x = gas_in_ga)
+
+
+# join is our friend
+store_in_county <- st_join(dat, cal, join = st_within) %>%
+    select(placekey, street_address, city, region, geometry, countyfp)
+
+store_in_county_count <- store_in_county %>%
+    as_tibble() %>% 
+    count(countyfp) %>%
+    filter(!is.na(countyfp))
+
+calw <- calw %>%
+    left_join(store_in_county_count, fill = 0) %>%
+    replace_na(list(n = 0)) 
+
+
 
 
 # Graph?
@@ -156,3 +174,17 @@ tm_shape(gas_in_ga) +
         )
     ) +
 tm_borders(col = 'darkgray', lwd = 0.7) 
+
+
+leaflet(gas_in_ga2) %>%
+    addPolygons(
+        data = gas_in_ga2,
+        fillColor = ~pal(value),
+        fillOpacity = .5,
+        color = "darkgrey",
+        weight = 2) #%>%
+    #addCircleMarkers(
+        #data = filter(dat, region == "CA"),
+        #radius = 3,
+        #color = "grey") %>%
+    addProviderTiles(providers$CartoDB.Positron)

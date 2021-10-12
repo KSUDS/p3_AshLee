@@ -105,12 +105,37 @@ cal %>%
 
 # blend/join together
 chipolte_in_county <- st_join(dat, cal, join = st_within)
-chipolte_in_county <- chipolte_in_county %>% select(-33)
+chipolte_in_county <- chipolte_in_county %>% select(-48)
 
 # create object w/ count by county
 chipolte_in_county %>%
     as_tibble() %>%
     count(geoid, name)
+
+store_in_county <- store_in_county %>% select(-48)
+
+# join is our friend
+store_in_county <- st_join(dat, cal, join = st_within) %>%
+    select(placekey, street_address, city, region, geometry, countyfp)
+
+store_in_county_count <- store_in_county %>%
+    as_tibble() %>% 
+    count(countyfp) %>%
+    filter(!is.na(countyfp))
+
+calw <- calw %>%
+    left_join(store_in_county_count, fill = 0) %>%
+    replace_na(list(n = 0)) 
+
+
+
+
+
+
+
+
+
+
 
 # need to define calw
 bins <- c(0, 10, 20, 30, 50, 70, 90, 110)
