@@ -4,6 +4,7 @@ library(sf)
 library(jsonlite)
 library(USAboundaries)
 library(leaflet)
+library(tmap)
 
 json_to_tibble <- function(x) {
     if(is.na(x))  return(x)
@@ -23,7 +24,7 @@ bracket_to_tibble <- function(x){
 }
 
 # Read in original file
-dat <- read_csv("C:/code/p3_AshLee/hackathon_data/201907/core_poi-patterns.csv")
+dat <- read_csv("C:/code/p3_AshLee/hackathon_data/202107/core_poi-patterns.csv")
 
 # Create version with filtered columns
 
@@ -45,7 +46,7 @@ datNest2 <- datNest %>%
     unnest(visitor_cbg) 
 
 # Write csv file for base.
-write.csv('C:/code/p3_AshLee/data/v1_base_b4_census.csv', x = datNest2)
+write.csv('C:/code/p3_AshLee/data/2021_base_b4_census.csv', x = datNest2)
 
 # Import definition files for lat/long
 #def1 <- read_csv("C:/code/p3_AshLee/hackathon_data/safegraph_open_census_data_2019/metadata/cbg_geographic_data2.csv", col_types = "cddcc")
@@ -99,15 +100,16 @@ datNest4 <- datNest3 %>%
 filter(datNest4, street_address == "2009 W Hill Ave")
 
 # Write data with census data metrics
-write.csv('C:/code/p3_AshLee/data/v1_base_with_census_metrics.csv', x = datNest4)
+write.csv('C:/code/p3_AshLee/data/2021_base_with_census_metrics.csv', x = datNest4)
 #write.csv('C:/code/p3_AshLee/data/garbage.csv', x = datNest3)
 
 # Code in case break in work
 datNest4 <- read_csv("C:/code/p3_AshLee/data/v1_base_with_census_metrics.csv")
 
+
 # Getting mapping data
 datNest4 <- datNest4 %>%
-    st_as_sf(coords = c("longitude", "latitude"), crs = 4326)  # i omitted lat/long...needed?
+    st_as_sf(coords = c("longitude", "latitude"), crs = 4326)
 
 ga <- USAboundaries::us_counties(states = 'Georgia')
 
@@ -121,16 +123,36 @@ ga <- USAboundaries::us_counties(states = 'Georgia')
 
 
 # Join data
-gas_in_ga <- st_join(datNest4, ga, join = st_within)
+gas_in_ga2 <- st_join(datNest4, ga, join = st_within)
 # remove duplicate state
-gas_in_ga <- gas_in_ga %>% select(-24)
+gas_in_ga2 <- gas_in_ga2 %>% select(-20)
 
 # Write the joined mapping data
-write.csv('C:/code/p3_AshLee/data/v1_base_with_census_mapping_metrics.csv', x = gas_in_ga)
+write.csv('C:/code/p3_AshLee/data/2021_base_with_census_mapping_metrics2.csv', x = gas_in_ga)
+
 
 # Graph?
-ggplot(data = gas_in_ga) +
-    #geom_sf(data = ga) +
-    geom_sf(aes(fill = wam_income)) +
+ggplot() +
+    geom_sf(data = ga) +
+    geom_sf(data = gas_in_ga2, aes(fill = wam_income)) +
     scale_fill_viridis_c(option = "plasma", trans = "sqrt")
     #geom_sf_text(data = ga, aes(label = name), color = "grey")
+
+tmap_mode("view")
+tm_shape(gas_in_ga) +
+    tm_fill(
+        col = "wam_income",
+        palette = 'Greens',
+        style = 'cont',
+        contrast = c(.1,1),
+        title = 'Median Income By County',
+        id = ,
+        showNA = FALSE,
+        alpha = 0.8,
+        popup.vars = c("Total Visits" = 'value',
+        'Median Income' = 'wam_income'),
+        popup.format = list( value = list(format = "f", digits = 0),
+        wam_income = list(format = "f", disgits = 0)
+        )
+    ) +
+tm_borders(col = 'darkgray', lwd = 0.7) 
