@@ -2,6 +2,8 @@
 library(tidyverse)
 library(sf)
 library(jsonlite)
+library(USAboundaries)
+library(leaflet)
 
 json_to_tibble <- function(x) {
     if(is.na(x))  return(x)
@@ -21,12 +23,12 @@ bracket_to_tibble <- function(x){
 }
 
 # Read in original file
-dat <- read_csv("C:/code/p3_AshLee/hackathon_data/201907/core_poi-patterns.csv", col_types = "cccccccldcccccdcccclccTTddcccddccccccdcc")
+dat <- read_csv("C:/code/p3_AshLee/hackathon_data/201907/core_poi-patterns.csv")
 
 # Create version with filtered columns
 
 dat2 <- dat %>%
-    select(c('placekey','brands','latitude', 'longitude','city','raw_visit_counts','raw_visitor_counts','visitor_home_cbgs','poi_cbg','visitor_home_aggregation'))
+    select(c('street_address','raw_visit_counts','visitor_home_cbgs'))
 
 # Flip to tibble (Only on visitor home cbgs, keeping other just in case)
 
@@ -41,7 +43,7 @@ datNest <- dat2 %>%
 # Verticle breakage
 
 datNest2 <- datNest %>%
-    select(placekey,brands,city,poi_cbg, visitor_cbg) %>%
+    select(street_address, visitor_cbg) %>%
     unnest(visitor_cbg) 
 
 # Write csv file for base.
@@ -78,13 +80,30 @@ datNest3 <- merge(datNest2, def3, by.x = c('name'), by.y = c('census_block_group
 datNest3 <- merge(datNest3, def4, by.x = c('name'), by.y = c('census_block_group'))
 datNest3 <- merge(datNest3, def5, by.x = c('name'), by.y = c('census_block_group'))
 
-head(datNest3)
+#pull down to one level
+
+datNest4 <- datNest3 %>%
+        group_by(street_address) %>%
+        summarise(wam_age = weighted.mean(B01002e1,value,na.rm = TRUE)
+                ,wam_income = weighted.mean(B19013e1,value,na.rm = TRUE)
+                ,ttl_value = sum(value)
+                ,ttl_population = sum(B03002e1)
+                ,ttl_white = sum(B03002e3)
+                ,ttl_black = sum(B03002e4)
+                ,ttl_asian = sum(B03002e6)
+                ,ttl_hispanic = sum(B03002e12)
+                ,ttl_other = sum(other)
+                ) %>%
+        ungroup()
+     
+    
+# checking
+filter(datNest4, street_address == "2009 W Hill Ave")
 
 # Write data with census data metrics
-write.csv('C:/code/p3_AshLee/data/v1_base_with_census_metrics.csv', x = datNest3)
-
+write.csv('C:/code/p3_AshLee/data/v1_base_with_census_metrics.csv', x = datNest4)
+#write.csv('C:/code/p3_AshLee/data/garbage.csv', x = datNest3)
 
 # Code in case break in work
-datNest3 <- read_csv("C:/code/p3_AshLee/data/v1_base_with_census_metrics.csv")
+datNest4 <- read_csv("C:/code/p3_AshLee/data/v1_base_with_census_metrics.csv")
 
-df <- sf::st_read("file_name.geojson")
