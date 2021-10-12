@@ -126,3 +126,10 @@ gas_in_ga <- gas_in_ga %>% select(-24)
 
 # Write the joined mapping data
 write.csv('C:/code/p3_AshLee/data/v1_base_with_census_mapping_metrics.csv', x = gas_in_ga)
+
+# Graph?
+ggplot() +
+    geom_sf(data = ga) +
+    #geom_sf(data = gas_in_ga, aes(fill = wam_income))
+    geom_sf(data = gas_in_ga, aes(fill = wam_income))
+    #geom_sf_text(data = ga, aes(label = name), color = "grey")
