@@ -105,9 +105,26 @@ cal %>%
 
 # blend/join together
 chipolte_in_county <- st_join(dat, cal, join = st_within)
-
+chipolte_in_county <- chipolte_in_county %>% select(-33)
 
 # create object w/ count by county
 chipolte_in_county %>%
     as_tibble() %>%
     count(geoid, name)
+
+# need to define calw
+bins <- c(0, 10, 20, 30, 50, 70, 90, 110)
+pal <- colorBin("YlOrRd", domain = calw$n)
+
+m <- leaflet(calw) %>%
+    addPolygons(
+        data = calw,
+        fillColor = ~pal(n),
+        fillOpacity = .5,
+        color = "darkgrey",
+        weight = 2) %>%
+    addCircleMarkers(
+        data = filter(dat, region == "CA"),
+        radius = 3,
+        color = "grey") %>%
+    addProviderTiles(providers$CartoDB.Positron)
