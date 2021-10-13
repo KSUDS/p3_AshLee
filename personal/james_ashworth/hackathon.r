@@ -125,21 +125,28 @@ ga <- USAboundaries::us_counties(states = 'Georgia')
 ga <- ga %>% select(-9)
 
 
-# Join data
-gas_in_ga2 <- st_join(datNest4, ga, join = st_within)
+# Join data (why polygons dropped)
+gas_in_ga2 <- st_join(datNest4, ga, join = st_within) %>%
+    select(street_address, geometry, countyfp, wam_age, wam_income, ttl_value, ttl_population, ttl_white, ttl_black, ttl_asian, ttl_hispanic, ttl_other)
 
 
 # Write the joined mapping data
 write.csv('C:/code/p3_AshLee/data/2021_base_with_census_mapping_metrics2.csv', x = gas_in_ga)
 
 
-# join is our friend
-store_in_county <- st_join(dat, cal, join = st_within) %>%
-    select(placekey, street_address, city, region, geometry, countyfp)
+# join is our friend not working here
 
-store_in_county_count <- store_in_county %>%
-    as_tibble() %>% 
-    count(countyfp) %>%
+gas_in_ga2_count <- gas_in_ga2 %>%
+    as_tibble() %>%
+    weighted.mean(wam_age,ttl_value,na.rm = TRUE) %>%
+    weighted.mean(wam_income,ttl_value,na.rm = TRUE) %>%
+    sum(ttl_value) %>%
+    sum(ttl_population) %>%
+    sum(ttl_white) %>%
+    sum(ttl_black) %>%
+    sum(ttl_asian) %>%
+    sum(ttl_hispanic) %>%
+    sum(ttl_other) %>%
     filter(!is.na(countyfp))
 
 calw <- calw %>%
