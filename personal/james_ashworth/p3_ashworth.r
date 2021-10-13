@@ -105,14 +105,43 @@ cal %>%
 
 # blend/join together
 chipolte_in_county <- st_join(dat, cal, join = st_within)
-chipolte_in_county <- chipolte_in_county %>% select(-48)
+chipolte_in_county <- chipolte_in_county %>% select(-33)
 
 # create object w/ count by county
 chipolte_in_county %>%
     as_tibble() %>%
     count(geoid, name)
 
-store_in_county <- store_in_county %>% select(-48)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 # join is our friend
 store_in_county <- st_join(dat, cal, join = st_within) %>%

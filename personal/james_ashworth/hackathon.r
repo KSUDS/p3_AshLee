@@ -104,7 +104,7 @@ write.csv('C:/code/p3_AshLee/data/2021_base_with_census_metrics.csv', x = datNes
 #write.csv('C:/code/p3_AshLee/data/garbage.csv', x = datNest3)
 
 # Code in case break in work
-datNest4 <- read_csv("C:/code/p3_AshLee/data/v1_base_with_census_metrics.csv")
+datNest4 <- read_csv("C:/code/p3_AshLee/data/2021_base_with_census_metrics.csv")
 
 
 # Getting mapping data
@@ -123,7 +123,13 @@ ga <- USAboundaries::us_counties(states = 'Georgia')
 
 # remove duplicate state
 ga <- ga %>% select(-9)
+ 
+# Trying
+library(sp)
+require(sp)
+gas_in_ga2 <- sp::merge(ga, datNest4, by = 'Geometry')
 
+ga@data = data.frame(ga@data, datNest4[match(ga@data[,Geometry], datNest4[,Geometry]),])
 
 # Join data (why polygons dropped)
 gas_in_ga2 <- st_join(datNest4, ga, join = st_within) %>%
