@@ -52,5 +52,11 @@ ggplot()+
 top_counties <- gas_in_ga %>%
     filter(namelsad == c("Gwinnett", "Fulton", "DeKalb"))
 
+
+ggplot()+
+    geom_sf(data = ga) +
+    geom_sf(data = gas_in_ga, aes(color = wam_income, size = ttl_value)) +
+    scale_fill_viridis_c(option = "plasma", trans = "sqrt")
+
 #continue for 2021 data
 
