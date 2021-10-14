@@ -31,7 +31,7 @@ datNest <- dat %>%
 datNest2 <- datNest %>%
     select(street_address, poi_cbg, , latitude, longitude, visitor_cbg) %>%
     unnest(visitor_cbg) 
-sum(datNest2$value)
+
 # Pull in census tables needed for calculations
 
 def2 <- read_csv("C:/code/p3_AshLee/hackathon_data/safegraph_open_census_data_2019/data/cbg_b03.csv")
@@ -69,8 +69,6 @@ datNest4 <- datNest3 %>%
                 ,ttl_other = sum(other)
                 ) %>%
         ungroup()
-    
-
 
 # Format the geometry
 datNest4 <- datNest4 %>%
@@ -116,7 +114,7 @@ dat3 <- dat2 %>%
 
 # Write out safegraph data to get on with it.  Work on mapping later
 dat3 <- dat3 %>% as_tibble %>% select(-geometry)
-write.csv('C:/code/p3_AshLee/data/202107_formatted_county_data.csv', x = dat3)
+write.csv('C:/code/p3_AshLee/data/202107_formatted_county_data.csv', x = datNest)
 
 
 #####################################################  End
@@ -126,11 +124,6 @@ write.csv('C:/code/p3_AshLee/data/202107_formatted_county_data.csv', x = dat3)
 ga_count <- dat2 %>%
     select(countyfp, name, wam_age, wam_income, ttl_value, ttl_population, ttl_white, ttl_black, ttl_asian, ttl_hispanic, ttl_other) %>%
     as_tibble()
-
-
-# Summarize by county
-
-
 
 # Final combination
 gaw <- gaw %>%
