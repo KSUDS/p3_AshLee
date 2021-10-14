@@ -2,7 +2,7 @@ library(tidyverse)
 library(sf)
 library(USAboundaries)
 library(leaflet)
-
+ 
 httpgd::hgd() # for VSCode
 httpgd::hgd_browse() # for VSCode
 
@@ -50,7 +50,7 @@ ggplot(data = calw) +
 store_in_county <- st_join(dat, cal, join = st_within) %>%
     select(placekey, street_address, city, region, geometry, countyfp, name)
 
-# count
+# count  ###########  need to do this then join back to gaw
 store_in_county_count <- store_in_county %>%
     as_tibble() %>% 
     count(countyfp, name) %>%

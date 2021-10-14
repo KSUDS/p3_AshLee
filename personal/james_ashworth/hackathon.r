@@ -123,13 +123,6 @@ ga <- USAboundaries::us_counties(states = 'Georgia')
 
 # remove duplicate state
 ga <- ga %>% select(-9)
- 
-# Trying
-library(sp)
-require(sp)
-gas_in_ga2 <- sp::merge(ga, datNest4, by = 'Geometry')
-
-ga@data = data.frame(ga@data, datNest4[match(ga@data[,Geometry], datNest4[,Geometry]),])
 
 # Join data (why polygons dropped)
 gas_in_ga2 <- st_join(datNest4, ga, join = st_within) %>%
