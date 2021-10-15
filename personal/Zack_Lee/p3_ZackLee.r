@@ -48,14 +48,10 @@ ggplot()+
     geom_sf(data = gas_in_ga, aes(color = wam_income, size = ttl_asian)) +
     scale_fill_viridis_c(option = "plasma", trans = "sqrt")
 
-#trying to filter top counties
-top_counties <- gas_in_ga %>%
-    filter(namelsad == c("Gwinnett", "Fulton", "DeKalb"))
-
 
 ggplot()+
     geom_sf(data = ga) +
-    geom_sf(data = gas_in_ga, aes(color = wam_income, size = ttl_value)) +
+    geom_sf(data = gas_in_ga, aes(color = ttl_value)) +
     scale_fill_viridis_c(option = "plasma", trans = "sqrt")
 
 
@@ -67,6 +63,7 @@ View(year19)
 testest19 <- year19 %>%
     mutate(year = "2019")
 
+#fitlering top counties 2019
 
 Gwinnett1 <- testest19 %>%
     filter(name == "Gwinnett")
@@ -167,5 +164,13 @@ ggplot(counties_total, aes(x=name, y = ttl_value, size = 2,
 color = year)) + 
 theme_bw() +
 geom_point()+
-labs(y = "Number of Costumers", x = "County", title = "Change in Visits by Highest Income Counties (2019 to 2021)")+
+labs(y = "Number of Costumers", x = "County", title = "Change in Customer Couunt by Highest Income Counties (2019 to 2021)")+
+guides(size=FALSE)
+
+#Age ggplot 2019 + 2021 by county
+ggplot(counties_total, aes(x=name, y = wam_age, size = 2,
+color = year)) + 
+theme_bw() +
+geom_point()+
+labs(y = "Average Age", x = "County", title = "Change in Average Age by Highest Income Counties (2019 to 2021)")+
 guides(size=FALSE)
