@@ -7,8 +7,8 @@ library(dbplyr)
 #2019
 year19 <- read.csv("/Users/ashleyrabanales/Projects_ST/p3_AshLee/data/201907_formatted_county_data.csv")
 
-dat19 <- dat19 %>%
-  mutate(year = "2019") %>%
+dat19 <- year19 %>%
+  mutate(year = "2019") 
 
   Gwinnett1 <- dat19 %>%
   filter(name == "Gwinnett")
@@ -83,13 +83,32 @@ DeKalb <- dat21 %>%
 
 counties21 <- rbind(Gwinnett, Fulton, Forsyth, Cherokee, Fayette, Cobb, Columbia, Oconee, Dawson, DeKalb)
 
-#interference with columns not matching - find the common col
-common_cols <- intersect(colnames(counties19), colnames(counties21))
+#######
 
-total_counties =rbind(subset(counties19, select = common_cols), 
-                 subset(counties21, select = common_cols))
+ggplot(total_counties, aes(x = name, y=wam_age, color = year)) +  
+  geom_point (aes(name)) +
+  labs ( x = "County", y ="Age", 
+         title = "Average Age in County",
+         subtitle = "Change in the Average Age by County, 2019 and 2021",
+         caption = "Source: SafeGraph", color = "Year"
+  ) + scale_color_manual(values=c("brown3", "blue1"))
 
 
+ggsave(filename = "age.png", width = 10, height = 7)
+
+
+
+ggplot(total_counties, aes(x = name, y=wam_income, color = year)) +  
+      geom_point (aes(wam_age)) +
+      geom_line(aes(wam_age)) +
+      labs ( x = "Age", y ="Income", 
+             title = "Annual Income ",
+             subtitle = "Income In Year by the Average Age, 2019 and 2021",
+             caption = "Source: SafeGraph", color = "Year"
+             ) + scale_color_manual(values=c("darkolivegreen3", "steelblue2"))
+  
+
+ggsave(filename = "income_in_year_by_age.png", width = 10, height = 7)
 
 #comparing the years to county in the census gov
 #aggerating county
