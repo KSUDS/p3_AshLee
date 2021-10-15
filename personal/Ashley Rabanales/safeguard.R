@@ -83,6 +83,7 @@ DeKalb <- dat21 %>%
 
 counties21 <- rbind(Gwinnett, Fulton, Forsyth, Cherokee, Fayette, Cobb, Columbia, Oconee, Dawson, DeKalb)
 
+#interference with columns not matching - find the common col
 common_cols <- intersect(colnames(counties19), colnames(counties21))
 
 total_counties =rbind(subset(counties19, select = common_cols), 
