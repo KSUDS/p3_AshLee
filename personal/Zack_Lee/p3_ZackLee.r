@@ -65,7 +65,7 @@ year19 <- read_csv("~/Downloads/Data_Science/p3_AshLee-1/data/201907_formatted_c
 View(year19)
 
 testest19 <- year19 %>%
-    mutate(year = 2019)
+    mutate(year = "2019")
 
 
 Gwinnett1 <- testest19 %>%
@@ -108,7 +108,7 @@ testest <- read_csv("~/Downloads/Data_Science/p3_AshLee-1/data/202107_formatted_
 View(testest)
 
 testest21 <- testest %>%
-    mutate(year = 2021)
+    mutate(year = "2021")
 
 View(testest21)
 #filtering top counties
@@ -152,11 +152,20 @@ counties21 <- rbind(Gwinnett, Fulton, Forsyth, Cherokee, Fayette, Cobb, Columbia
 
  counties_total<- rbind(counties19,counties21)
 
-
+#Income ggplot 2019 + 2021 by county
 ggplot(counties_total, aes(x=name, y=wam_income, size = 2,
-color = year, c("2019","2021"))) + 
+color = year)) + 
 theme_bw() +
 geom_point()+
 labs(y = "Average Income", x = "County", title = "Change in Average Income by Highest Income Counties (2019 to 2021)")+
 guides(size=FALSE)
 
+
+
+#Volume ggplot 2019 + 2021 by county
+ggplot(counties_total, aes(x=name, y = ttl_value, size = 2,
+color = year)) + 
+theme_bw() +
+geom_point()+
+labs(y = "Number of Costumers", x = "County", title = "Change in Visits by Highest Income Counties (2019 to 2021)")+
+guides(size=FALSE)
