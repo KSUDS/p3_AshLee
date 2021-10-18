@@ -228,7 +228,7 @@ m <- leaflet(calw_4326) %>%
     ###10/18 - A time and space example
 
     #package & data
-    library(tidyverse)
+library(tidyverse)
 library(sf)
 library(USAboundaries)
 library(leaflet)
