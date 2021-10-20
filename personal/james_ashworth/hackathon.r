@@ -5,6 +5,8 @@ library(jsonlite)
 library(USAboundaries)
 library(leaflet)
 library(tmap)
+library(geofacet)
+library(hash)
 
 json_to_tibble <- function(x) {
     if(is.na(x))  return(x)
@@ -104,7 +106,7 @@ write.csv('C:/code/p3_AshLee/data/2021_base_with_census_metrics.csv', x = datNes
 #write.csv('C:/code/p3_AshLee/data/garbage.csv', x = datNest3)
 
 # Code in case break in work
-datNest4 <- read_csv("C:/code/p3_AshLee/data/2021_base_with_census_metrics.csv")
+datNest4 <- read_csv("C:/code/p3_AshLee/data/202107_formatted_county_data.csv")
 
 
 # Getting mapping data
@@ -112,6 +114,25 @@ datNest4 <- datNest4 %>%
     st_as_sf(coords = c("longitude", "latitude"), crs = 4326)
 
 ga <- USAboundaries::us_counties(states = 'Georgia')
+
+### Trying something 1020 to get graph
+gas_in_ga3 <- gas_in_ga2 %>% as_tibble()
+gas_in_ga3 <- gas_in_ga3 %>% select(-geometry)
+
+gas_in_ga3 <- gas_in_ga3 %>%
+    left_join(ga, by = "countyfp") 
+
+gas_in_ga3 %>%
+    ggplot(aes(x = wam_age, y = wam_income)) +
+    geom_point() +
+    geom_smooth() +
+    # geom_text(aes(label = stores_label),
+    #     x = -Inf, y = Inf,
+    #     hjust = "left", vjust = "top") +
+    coord_cartesian(ylim = c(25000, 125000)) +
+    facet_wrap(~name)
+
+ggsave("C:/code/p3_AshLee/documents/ashworth_county.png", width = 25)
 
 
 # Showing options middle and area
@@ -137,60 +158,20 @@ write.csv('C:/code/p3_AshLee/data/2021_base_with_census_mapping_metrics2.csv', x
 
 gas_in_ga2_count <- gas_in_ga2 %>%
     as_tibble() %>%
-    weighted.mean(wam_age,ttl_value,na.rm = TRUE) %>%
-    weighted.mean(wam_income,ttl_value,na.rm = TRUE) %>%
-    sum(ttl_value) %>%
-    sum(ttl_population) %>%
-    sum(ttl_white) %>%
-    sum(ttl_black) %>%
-    sum(ttl_asian) %>%
-    sum(ttl_hispanic) %>%
-    sum(ttl_other) %>%
-    filter(!is.na(countyfp))
+    group_by(countyfp) %>%
+        summarise(wam_age = weighted.mean(wam_age, ttl_value, na.rm = TRUE)
+                ,wam_income = weighted.mean(wam_income, ttl_value, na.rm = TRUE)
+                ,ttl_value = mean(ttl_value)
+                ,ttl_population = weighted.mean(ttl_population, ttl_value,na.rm = TRUE)
+                ,ttl_white = weighted.mean(ttl_white, ttl_value, na.rm = TRUE)
+                ,ttl_black = weighted.mean(ttl_black, ttl_value, na.rm = TRUE)
+                ,ttl_asian = weighted.mean(ttl_asian, ttl_value, na.rm = TRUE)
+                ,ttl_hispanic = weighted.mean(ttl_hispanic, ttl_value, na.rm = TRUE)
+                ,ttl_other = weighted.mean(ttl_other, ttl_value, na.rm = TRUE)
+                ) %>%
+        ungroup()
 
-calw <- calw %>%
-    left_join(store_in_county_count, fill = 0) %>%
+
+ga <- ga %>%
+    left_join(gas_in_ga2_count, fill = 0) %>%
     replace_na(list(n = 0)) 
-
-
-
-
-# Graph?
-ggplot() +
-    geom_sf(data = ga) +
-    geom_sf(data = gas_in_ga2, aes(fill = wam_income)) +
-    scale_fill_viridis_c(option = "plasma", trans = "sqrt")
-    #geom_sf_text(data = ga, aes(label = name), color = "grey")
-
-tmap_mode("view")
-tm_shape(gas_in_ga) +
-    tm_fill(
-        col = "wam_income",
-        palette = 'Greens',
-        style = 'cont',
-        contrast = c(.1,1),
-        title = 'Median Income By County',
-        id = ,
-        showNA = FALSE,
-        alpha = 0.8,
-        popup.vars = c("Total Visits" = 'value',
-        'Median Income' = 'wam_income'),
-        popup.format = list( value = list(format = "f", digits = 0),
-        wam_income = list(format = "f", disgits = 0)
-        )
-    ) +
-tm_borders(col = 'darkgray', lwd = 0.7) 
-
-
-leaflet(gas_in_ga2) %>%
-    addPolygons(
-        data = gas_in_ga2,
-        fillColor = ~pal(value),
-        fillOpacity = .5,
-        color = "darkgrey",
-        weight = 2) #%>%
-    #addCircleMarkers(
-        #data = filter(dat, region == "CA"),
-        #radius = 3,
-        #color = "grey") %>%
-    addProviderTiles(providers$CartoDB.Positron)
