@@ -330,7 +330,6 @@ dat_time <- dat %>%
         stores_label = c(stores[1], rep(NA, length(stores) - 1))
     )
 
-
     dat_time %>%
     ggplot(aes(x = dayMonth, y = dayAverage)) +
     geom_point() +
@@ -340,3 +339,5 @@ dat_time <- dat %>%
             x = -Inf, y = Inf,
             hjust = "left", vjust = "top") +
     facet_geo(~region, grid = "us_state_grid2", label = "name")
+
+summary(dat_time)
