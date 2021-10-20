@@ -110,6 +110,7 @@ ggplot(total_counties, aes(x = name, y=wam_income, color = year)) +
 
 ggsave(filename = "income_in_year_by_age.png", width = 10, height = 7)
 
+
 #comparing the years to county in the census gov
 #aggerating county
 #median age by county year over year. 
