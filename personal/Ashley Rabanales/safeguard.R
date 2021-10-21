@@ -49,7 +49,9 @@ counties19 <- rbind(Gwinnett1, Fulton1, Forsyth1, Cherokee1, Fayette1, Cobb1, Co
 year21 <- read.csv("/Users/ashleyrabanales/Projects_ST/p3_AshLee/data/202107_formatted_county_data.csv")
 
 dat21 <- year21 %>%
-  mutate(year = "2021")
+  mutate(year = "2021") %>%
+  filter(name == "Gwinnett", "Fulton", "Forsyth", "Cherokee","Fayette",
+         "Cobb", "Columbia", "Oconee", "Dawson", "DeKalb")
 
 Gwinnett <- dat21 %>%
   filter(name == "Gwinnett")
@@ -109,6 +111,18 @@ ggplot(total_counties, aes(x = name, y=wam_income, color = year)) +
   
 
 ggsave(filename = "income_in_year_by_age.png", width = 10, height = 7)
+
+
+
+##Making a graph
+
+
+
+
+
+#geom_sf_text(data = ga, aes(label = name), color = "grey")
+
+
 
 
 #comparing the years to county in the census gov
