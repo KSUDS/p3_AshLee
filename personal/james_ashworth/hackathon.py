@@ -15,3 +15,21 @@ datNest3 = datNest3.drop('visitor_cbg', 1)
 
 # %%
 # bring in data from R vertical breakage
+# R code
+#Income, white
+ggplot()+
+    geom_sf(data = ga) +
+    geom_sf(data = gas_in_ga, aes(color = wam_income, size = ttl_white)) +
+    scale_fill_viridis_c(option = "plasma", trans = "sqrt")
+#Income, black
+ggplot()+
+    geom_sf(data = ga) +
+    geom_sf(data = gas_in_ga, aes(color = wam_income, size = ttl_black)) +
+    scale_fill_viridis_c(option = "plasma", trans = "sqrt")
+#Income, asian
+ggplot()+
+    geom_sf(data = ga) +
+    geom_sf(data = gas_in_ga, aes(color = wam_income, size = ttl_asian)) +
+    scale_fill_viridis_c(option = "plasma", trans = "sqrt")
+
+# %%

@@ -130,4 +130,5 @@ gaw <- gaw %>%
     left_join(ga_count, by = 'countyfp') %>%
     replace_na(list(n = 0)) 
 
-write.csv('C:/code/p3_AshLee/data/garbage2chk.csv', x = dat2)
+write.csv('C:/code/p3_AshLee/data/garbage2chk.csv', x = dat2) 
+write.csv('C:/code/p3_AshLee/data/ga.csv', x = ga) 
