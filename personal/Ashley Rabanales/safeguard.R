@@ -176,13 +176,7 @@ ggplot()+
 
 ##Making a graph
 
-
-
-
-
 #geom_sf_text(data = ga, aes(label = name), color = "grey")
-
-
 
 
 #comparing the years to county in the census gov
@@ -193,3 +187,31 @@ ggplot()+
 #create an age group
 #seperate and combine those near to cobb county. 
 
+
+#exporting out the data 
+#install.packages("sfarrow")
+library(USAboundaries)
+library(sfarrow)
+library(tidyverse)
+library(sf)
+
+
+usa_counties <- USAboundaries::us_counties() %>%
+    select(-state_name) %>%
+    st_transform(4326)
+
+usa_cities <- USAboundaries::us_cities() %>%
+    st_transform(4326)
+
+usa <- USAboundaries::us_boundaries() %>%
+select(-state_name) %>%
+  st_transform(4326)
+
+usa_cities <- USAboundaries:: us_cities() %>%
+  st_transform(4326)
+
+sfarrow::st_write_feather(usa_counties, ""
+  
+
+#Apache Arrow? open source, farme work of datawork from other people. Two packages parka and feathers
+#geopandas can read it in, quicker, faster, and less space.
