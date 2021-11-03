@@ -24,6 +24,7 @@ import pandas as pd
 import numpy as np
 import geopandas as gpd
 import pyarrow as pyarrow
+import rtree as rtree
 # %%
 census_url  = "https://www2.census.gov/geo/tiger/GENZ2018/shp/cb_2018_us_county_500k.zip"
 county_shp = gpd.read_file(census_url)
