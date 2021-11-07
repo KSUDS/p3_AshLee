@@ -188,3 +188,5 @@ dat_time %>%
         hjust = "left", vjust = "top") +
     coord_cartesian(ylim = c(5, 25)) +
     facet_geo(~region, grid = "us_state_grid2", label = "name")
+
+ggsave("C:/code/p3_AshLee/documents/us_capolte.png", width = 15, height = 5)
