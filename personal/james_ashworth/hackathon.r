@@ -130,7 +130,7 @@ gas_in_ga3 %>%
     #     x = -Inf, y = Inf,
     #     hjust = "left", vjust = "top") +
     coord_cartesian(ylim = c(25000, 125000)) +
-    facet_wrap(~name)
+    facet_wrap(~name) 
 
 ggsave("C:/code/p3_AshLee/documents/ashworth_county.png", width = 25)
 
