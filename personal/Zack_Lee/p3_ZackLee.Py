@@ -16,7 +16,7 @@ gas_in_ga = pd.read_csv('~/Downloads/Data_Science/p3_AshLee/data/v1_base_with_ce
 ga = pd.read_csv("/Users/Zack/Downloads/Data_Science/p3_AshLee-1/data/ga.csv")
 
 #%%
-ga <- USAboundaries::us_counties(states = 'Georgia')
+ga <- USAboundaries::us_counties(states = 'GA')
 # %%
 #Income, white
 ggplot()+
