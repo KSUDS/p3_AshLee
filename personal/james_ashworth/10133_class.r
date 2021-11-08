@@ -4,8 +4,8 @@ library(USAboundaries)
 library(leaflet)
 library(geofacet)
  
-httpgd::hgd() # for VSCode
-httpgd::hgd_browse() # for VSCode
+# httpgd::hgd()
+# httpgd::hgd_browse()
 
 dat <- read_rds("C:/code/p3_AshLee/data/chipotle_nested.rds") %>%
     st_as_sf(coords = c("longitude", "latitude"), crs = 4326)
@@ -45,7 +45,7 @@ ggplot(data = calw) +
     geom_sf(aes(geometry = sf_center), color = "darkgrey") +
     geom_sf_text(aes(label = name), color = "lightgrey") +
     geom_sf(data = filter(dat, region == "CA"), color = "black") + # our chipotle locations
-    theme_bw() 
+    theme_bw()
 
 # my questions on merging table
 store_in_county <- st_join(dat, cal, join = st_within) %>%
@@ -85,7 +85,6 @@ days_week_long <- dat_wc %>%
     select(placekey, city, region, contains("raw"),
         name, value, geometry, countyfp, name_county)
 
-
 days_week <-  days_week_long %>%
     pivot_wider(names_from = name, values_from = value)
 
@@ -115,8 +114,7 @@ ggplot() +
     theme_bw() +
     theme(legend.position = "bottom") +
     labs(fill = "Average store traffic", 
-      title = "Saturday traffic for Chipotle")      
-
+      title = "Saturday traffic for Chipotle")
 
 calw %>%
 ggplot() +
@@ -129,8 +127,6 @@ ggplot() +
         fill = "Average store traffic",
         size = "Number of stores",
         title = "Saturday traffic for Chipotle")
-
-########### 10/18 class
 
 # Import state profile
 states <- us_states() %>%
@@ -152,9 +148,9 @@ dat_space <- dat %>%
     as_tibble()
 
 states <- states %>%
-    left_join(dat_space) 
+    left_join(dat_space)
 
-# Temporal
+# Temporal dataset
 
 dat_time <- dat %>%
     as_tibble() %>%
@@ -172,7 +168,7 @@ dat_time <- dat %>%
     )
 
 # Geofacet
-
+# Graphs in shape of states, but mini-line/dot plots
 dat_time %>%
     ggplot(aes(x = dayMonth, y = dayAverage)) +
     geom_point() +
@@ -193,3 +189,4 @@ dat_time %>%
     coord_cartesian(ylim = c(5, 25)) +
     facet_geo(~region, grid = "us_state_grid2", label = "name")
 
+ggsave("C:/code/p3_AshLee/documents/us_capolte.png", width = 15, height = 5)
