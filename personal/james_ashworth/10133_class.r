@@ -191,3 +191,44 @@ dat_time %>%
     facet_geo(~region, grid = "us_state_grid2", label = "name")
 
 ggsave("C:/code/p3_AshLee/documents/us_capolte.png", width = 15, height = 5)
+
+# Try to do GA
+
+ga <- us_counties(states = "Georgia") %>%
+    select(countyfp, countyns, name, aland, awater, state_abbr, geometry)
+
+ga %>%
+    mutate(
+        states_area = aland + awater,
+        sf_area = st_area(geometry)) %>%
+    select(name, states_area, aland, sf_area, awater)
+# have to change lat/long to spacial using the stassf
+
+ksu <- tibble(latitude = 34.037876, longitude = -84.58102) %>%
+    st_as_sf(coords = c("longitude", "latitude"), crs = 3310)
+
+gaw <- ga %>%
+    st_transform(3310) %>% # search https://spatialreference.org/ref/?search=california&srtext=Search. Units are in meters for buffer.
+    filter(name != "San Francisco") %>%
+    mutate(
+        aland_acres = aland * 0.000247105,
+        awater_acres = awater * 0.000247105,
+        percent_water = 100 * (awater / aland),
+        sf_area = st_area(geometry),
+        sf_center = st_centroid(geometry),
+        sf_length = st_length(geometry),
+        sf_distance = st_distance(sf_center, ksu),
+        #sf_buffer = st_buffer(sf_center, 24140.2), # 24140.2 is 15 miles units in projection from st_transform
+        sf_intersects = st_intersects(., filter(., name == "Cobb"), sparse = FALSE)
+        )
+
+# Graph state
+ggplot(data = gaw) +
+    geom_sf(aes(fill = sf_intersects)) + 
+    #geom_sf(aes(geometry = sf_buffer), fill = "NA") +
+    geom_sf(aes(geometry = sf_center), color = "darkgrey") +
+    #geom_sf_text(aes(label = name), color = "lightgrey") +
+    geom_sf(data = filter(dat, region == "GA"), color = "black") + # our chipotle locations
+    theme_bw()
+
+ggsave("C:/code/p3_AshLee/documents/ga_capolte.png", width = 15, height = 5)

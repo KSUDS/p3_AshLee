@@ -34,6 +34,6 @@ This data cannot be shared in your repository based on our [use agreement with S
 
 - [X] Create an account with [SafeGraph](https://www.safegraph.com/academics)
 - [ ] Create a data investigation narrative or question that will drive your project.
-- [ ] Tell a story through time-series charts for your narrative.
-- [X] Tell a story through spatial maps for your narrative.
+- [X] Tell a story through time-series charts for your narrative.
+- [ ] Tell a story through spatial maps for your narrative.
 - [ ] Include a visualization that displays space and time in your narrative.
