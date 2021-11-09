@@ -39,6 +39,7 @@ calw <- cal %>%
         sf_intersects = st_intersects(., filter(., name == "Los Angeles"), sparse = FALSE)
         )
 
+# Graph state
 ggplot(data = calw) +
     geom_sf(aes(fill = sf_intersects)) + 
     geom_sf(aes(geometry = sf_buffer), fill = "NA") +
