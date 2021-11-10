@@ -51,7 +51,12 @@ graph = (dat_rsdb
 .head(20))
 
 # %%
-(ggplot(graph, aes( x = 'brand', y = 'visits')) +
+
+brand_list = ['mcdonalds','walmart','starbucks','target','chickfila','shell_oil','dunkin','walgreens','taco_bell','simon_mall','7eleven','wendys','cvs','chevron','speedway','the_home_depot','subway','bp','quiktrip','wawa']
+brand_cat = pd.Categorical(graph['brand'], categories = brand_list, ordered = True)
+graph = graph.assign(brand_cat = brand_cat)
+
+(ggplot(graph, aes( x = 'brand_cat', y = 'visits')) +
 geom_col() +
 coord_flip())
 # %%
