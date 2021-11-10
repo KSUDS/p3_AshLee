@@ -232,3 +232,4 @@ ggplot(data = gaw) +
     theme_bw()
 
 ggsave("C:/code/p3_AshLee/documents/ga_capolte.png", width = 15, height = 5)
+
