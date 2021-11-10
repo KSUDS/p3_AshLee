@@ -18,5 +18,5 @@ GA Spatial view of Chipolte by counties
 
 GA Interactive map of Chipolte
 
-![](documents/ga_chipoltemap.html)
+![](https://github.com/KSUDS/p3_AshLee/blob/main/documents/ga_chipoltemap.html)
 
