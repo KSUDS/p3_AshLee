@@ -3,7 +3,7 @@
 
 ## Background
 
-
+How sparse are Chipolte locations in GA
 
 ## Chipolte Graphs
 
