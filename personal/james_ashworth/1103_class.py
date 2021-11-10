@@ -24,7 +24,7 @@ os.getcwd() # get current working directory
 # Right click relative path for files when reading
 
 # %%
-dat_cal = dat.query("region=='CA'")
+dat_cal = dat.query("region=='GA'")
 dat_cal = gpd.GeoDataFrame(
     dat_cal.filter(["placekey", "latitude", "longitude", "median_dwell", "region"]),
         geometry=gpd.points_from_xy(dat_cal.longitude, dat_cal.latitude),
@@ -41,7 +41,7 @@ point = Point(
     ksu.geometry.to_crs(epsg = 3310).x,
     ksu.geometry.to_crs(epsg = 3310).y)
 # %%
-cal = county.query("stusps =='CA'")
+cal = county.query("stusps =='GA'")
 # %%
 # buffer for distance "w/in 10 miles example" have to convert to eqsg units
 calw = (cal
@@ -106,7 +106,7 @@ folium.LayerControl().add_to(base_inter)
 # %%
 # Save File as interactive html
 
-base_inter.save("C:/code/p3_AshLee/personal/james_ashworth/chipoltemap.html")
-theplot.save("C:/code/p3_AshLee/personal/james_ashworth/chipoltemap2.html")
+base_inter.save("C:/code/p3_AshLee/documents/ga_chipoltemap.html")
+theplot.save("C:/code/p3_AshLee/documents/ga_chipoltemap2.html")
 
 # %%
