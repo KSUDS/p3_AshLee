@@ -3,7 +3,9 @@
 
 # Hackathon, Gas Stations
 
-As a team we wanted to look at the profile of gas station customers in Georgia pre and post covid (assumption July 2019 & July 2021 are pre and post covid months).  The hypothesis is that remote work popularity would impact what type of customers are buying gas now versus those purchasing gas before covid struck the state of Georgia.
+As a team we wanted to look at the profile of gas station customers in Georgia pre and post covid (assumption July 2019 & July 2021 are pre and post covid months). Looking at the following graph we can see that overall income is down year over year for most ages.  Looking at normal income changes this would be strange; however, we are looking only at the customers visiting gas stations. The hypothesis is that remote work popularity would impact what type of customers are buying gas now versus those purchasing gas before covid struck the state of Georgia.
+
+![](documents/income_in_year_by_age.png)
 
 ## Gas Station Customers 2019, 2021, and Evolving Customer Profiles
 
