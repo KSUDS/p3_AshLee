@@ -108,5 +108,3 @@ folium.LayerControl().add_to(base_inter)
 
 base_inter.save("C:/code/p3_AshLee/documents/ga_chipoltemap.html")
 theplot.save("C:/code/p3_AshLee/documents/ga_chipoltemap2.html")
-
-# %%
